@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hearing Asymmetry Demo</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+</head>
+<body>
+    <div id="main-frame">
+        <div id="login-screen">
+            <h1 class="title">User Information</h1>
+            <form id="login-form">
+                <label for="name">Name:</label><br>
+                <input type="text" id="name" required><br><br>
+                
+                <label for="surname">Surname:</label><br>
+                <input type="text" id="surname" required><br><br>
+                
+                <label>Age Group:</label><br>
+                <input type="radio" name="age_group" value="child" required> Child (<18)<br>
+                <input type="radio" name="age_group" value="adult"> Adult (18–60)<br>
+                <input type="radio" name="age_group" value="senior"> Senior (60+)<br><br>
+                
+                <label>Gender (optional):</label><br>
+                <input type="radio" name="gender" value="male"> Male<br>
+                <input type="radio" name="gender" value="female"> Female<br>
+                <input type="radio" name="gender" value="other"> Other<br>
+                <input type="radio" name="gender" value="prefer_not_to_say"> Prefer not to say<br><br>
+                
+                <h2>🎧 Headphone Setup</h2>
+                <input type="checkbox" id="headphones_correct">
+                <label for="headphones_correct">I am wearing the headphones correctly (Left = L, Right = R).</label><br><br>
+                
+                <label>ANC Mode:</label><br>
+                <input type="radio" name="anc_mode" value="on"> ON<br>
+                <input type="radio" name="anc_mode" value="off"> OFF<br><br>
+                
+                <button type="submit" class="btn primary">Submit and Proceed</button>
+            </form>
+        </div>
+
+        <div id="welcome-screen" class="hidden">
+            <h1 class="title">🎧 Hearing Asymmetry Screening</h1>
+            <p class="subtitle">Welcome to the Hearing Test! 🔊</p>
+            <p>This quick demo (1-2 minutes) checks your hearing using headphones. 🎧</p>
+            <p>Ensure a quiet environment for best results. 🤫</p>
+            <button id="start-btn" class="btn success">Start Screening 🚀</button>
+            <p class="text">Press SPACE or click to proceed ⌨️</p>
+        </div>
+
+        <div id="consent-screen" class="hidden">
+            <h1 class="title">⚠️ Important Notice</h1>
+            <p class="subtitle">This demo is for showcase purposes only. 🩺</p>
+            <p>It is NOT a medical tool.</p>
+            <ul>
+                <li class="text">Results are not for diagnosis</li>
+                <li class="text">Consult an audiologist for hearing concerns</li>
+                <li class="text">Ensure headphones work properly</li>
+            </ul>
+            <p>By proceeding, you understand this is a demo.</p>
+            <button id="agree-btn" class="btn success">I Understand - Continue ✅</button>
+            <button id="back-welcome-btn" class="btn secondary">Back ⬅️</button>
+        </div>
+
+        <div id="device-check-screen" class="hidden">
+            <h1 class="title">🎧 Headphone Check</h1>
+            <p class="subtitle">Put on your headphones and position them correctly. 🎧</p>
+            <p>We'll play sounds to check left and right channels. 🔊</p>
+            <p id="channel-status"></p>
+            <button id="left-ear-btn" class="btn primary">🔊 Left Ear 👈</button>
+            <button id="right-ear-btn" class="btn primary">🔊 Right Ear 👉</button><br><br>
+            <button id="headphones-ready-btn" class="btn success">Headphones Ready ✓</button>
+            <button id="back-consent-btn" class="btn secondary">← Back</button>
+        </div>
+
+        <div id="calibration-screen" class="hidden">
+            <h1 class="title">🔧 Volume Calibration</h1>
+            <p class="subtitle">We'll play a 1000 Hz tone. 🎵</p>
+            <p>Adjust your computer's volume to a comfortable level before playing. This is the loudest sound you'll hear.</p>
+            <button id="play-tone-btn" class="btn primary">🔊 Play Tone</button><br><br>
+            <button id="volume-set-btn" class="btn success">Volume Set ✓</button>
+            <button id="back-device-btn" class="btn secondary">← Back</button>
+        </div>
+
+        <div id="instructions-screen" class="hidden">
+            <h1 class="title">📝 Test Instructions</h1>
+            <p class="subtitle">Here's how it works: 🔍</p>
+            <ul>
+                <li class="text">Hear beeps in left/right ears 👂</li>
+                <li class="text">Click YES if you hear a beep, NO if not</li>
+                <li class="text">Some trials are silent (normal) ❓</li>
+                <li class="text">If you click NO, you'll get up to 2 retries at the same level</li>
+                <li class="text">Test adjusts to find your threshold 📉</li>
+            </ul>
+            <p>Stay focused and respond quickly! ⚡</p>
+            <div class="key-frame">
+                <p>Click YES or NO after the tone</p>
+            </div>
+            <button id="start-test-btn" class="btn success">🎵 Start Test</button>
+            <button id="back-calibration-btn" class="btn secondary">← Back</button>
+        </div>
+
+        <div id="testing-screen" class="hidden">
+            <progress id="progress-bar" value="0" max="100"></progress>
+            <p id="progress-label">0%</p>
+            <p id="test-info">Preparing test... ⚙️</p>
+            <p id="ear-label"></p>
+            <p id="status-label"></p>
+            <div id="response-frame">
+                <p id="response-status">Listen carefully... 👂</p>
+                <div id="response-buttons" style="margin-top: 20px;">
+                    <button id="yes-btn" class="btn success" disabled>YES, I heard it ✓</button>
+                    <button id="no-btn" class="btn danger" disabled>NO, I didn't hear it ❌</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="results-screen" class="hidden">
+            <h1 class="title">📊 Test Results</h1>
+            <p id="status-text"></p>
+            <p id="recommendation"></p>
+            <canvas id="audiogram-chart"></canvas>
+            <button id="try-again-btn" class="btn primary">🔄 Try Again</button>
+            <button id="exit-btn" class="btn danger">Exit ❌</button>
+        </div>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>
