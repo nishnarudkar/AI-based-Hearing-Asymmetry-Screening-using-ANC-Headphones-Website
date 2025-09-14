@@ -55,9 +55,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
         name: document.getElementById('name').value,
         surname: document.getElementById('surname').value,
         age_group: document.querySelector('input[name="age_group"]:checked')?.value || null,
-        gender: document.querySelector('input[name="gender"]:checked')?.value || null,
-        headphones_correct: document.getElementById('headphones_correct').checked,
-        anc_mode: document.querySelector('input[name="anc_mode"]:checked')?.value || null
+        gender: document.querySelector('input[name="gender"]:checked')?.value || null
     };
     const response = await fetch('/register', {
         method: 'POST',
