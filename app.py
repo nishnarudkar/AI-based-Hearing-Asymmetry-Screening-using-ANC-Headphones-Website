@@ -9,7 +9,6 @@ from flask import Flask, jsonify, render_template, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from scipy.io.wavfile import write
 from dotenv import load_dotenv
-from supabase import create_client, Client
 
 # --- Configuration ---
 load_dotenv()
@@ -19,15 +18,29 @@ logger = logging.getLogger(__name__)
 
 # --- App & Database Initialization ---
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+# Use DATABASE_URL if available, otherwise fallback to SQLite
+db_url = os.environ.get('DATABASE_URL')
+if not db_url:
+    db_url = 'sqlite:///users.db'
+    logger.info("DATABASE_URL not set; using local SQLite fallback")
+app.config['SQLALCHEMY_DATABASE_URI'] = db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 
-# --- Supabase Client Initialization ---
-url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
-supabase: Client = create_client(url, key)
+# --- Supabase Client Initialization (optional) ---
+supabase = None
+try:
+    url: str = os.environ.get("SUPABASE_URL")
+    key: str = os.environ.get("SUPABASE_KEY")
+    if url and key:
+        from supabase import create_client
+        supabase = create_client(url, key)
+        logger.info("Supabase client initialized")
+    else:
+        logger.info("SUPABASE_URL or SUPABASE_KEY not set; Supabase client disabled")
+except Exception as e:
+    logger.warning(f"Supabase initialization failed (non-fatal): {e}")
 
 
 # --- Database Model Definition ---
