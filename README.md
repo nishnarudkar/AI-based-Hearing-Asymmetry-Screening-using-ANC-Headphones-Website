@@ -47,8 +47,8 @@ It guides a user through a pure-tone audiometry test, dynamically generates the 
 1.  **Clone the repository:**
 
     ```sh
-    git clone https://github.com/YOUR_USERNAME/YOUR_REPO_NAME.git
-    cd YOUR_REPO_NAME
+    git clone https://github.com/nishnarudkar/AuroHear--Web-Based-Hearing-Asymmetry-Screening-Tool.git
+    cd AuroHear--Web-Based-Hearing-Asymmetry-Screening-Tool
     ```
 
 2.  **Create and activate a virtual environment:**
